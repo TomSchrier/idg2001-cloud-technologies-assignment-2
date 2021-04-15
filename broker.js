@@ -16,6 +16,7 @@ broker.on('ready', () => {
 
 broker.on("published", (packet) => {
   var message = packet.payload;
+  console.log(packet.payload)
 
   /* var messageJSON = JSON.parse(message); // Convert JSON string to object
   var messageXML = json2xml(messageJSON); // Convert from JSON to XML
