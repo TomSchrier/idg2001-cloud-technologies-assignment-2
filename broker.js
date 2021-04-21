@@ -15,18 +15,18 @@ broker.on('ready', () => {
 });
 
 broker.on("published", (packet) => {
-  var message = packet.payload;
+  var message = packet.payload.toString();
 
-  console.log(`The broker received this: ${message.blue}`);
+  console.log(`The broker received this: ${message.blue}`); 
 
   mongo.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (error, client) => {
     var myCol = client.db('messagesdb').collection('messages'); // DB name and collection name
     myCol.insertOne(
       {
-        message: message,
+        message: JSON.parse(message),
       },
       () => {
-        console.log('Data is saved to MongoDB'.green);
+        console.log(`Data was saved to MongoDB`.green);
         client.close();
       }
     );
