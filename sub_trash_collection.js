@@ -12,18 +12,6 @@ client.on('connect', () => {
 
 await client.on('message', (topic, message) => {
     var message = message
-
-    /* const xml = message.toString()
-
-    xml2js.parseString(xml, (err, result) => {
-        if (err) {
-            throw err;
-        } 
-        const json = JSON.stringify(result, null, 4); // `result` is a JavaScript object. convert it to a JSON string 
-        console.log(json);
-    }); */
-
-
     console.log(`I got: '${message.blue}' from the topic '${topic.yellow}'.`)
 });
 
