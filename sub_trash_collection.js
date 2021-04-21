@@ -3,9 +3,9 @@ const xml2js = require('xml2js');
 const colors = require('colors');
 
 var client = mqtt.connect('mqtt://localhost:8080');
-var topic = 'fire';
+var topic = 'trash-level';
 
-client.on('message', (topic2, message) => {
+client.on('message', (topic, message) => {
     var message = message
 
     const xml = message.toString()

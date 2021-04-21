@@ -4,7 +4,7 @@ var settings = { port: 8080 };
 var broker = new mosca.Server(settings);
 
 var colors = require('colors');
-var json2xml = require('json2xml');
+const xml2js = require('xml2js');
 
 // MongoDB
 var mongo = require('mongodb').MongoClient;
@@ -16,17 +16,10 @@ broker.on('ready', () => {
 
 broker.on("published", (packet) => {
   var message = packet.payload;
-  console.log(packet.payload)
-
-  /* var messageJSON = JSON.parse(message); // Convert JSON string to object
-  var messageXML = json2xml(messageJSON); // Convert from JSON to XML
-
-  console.log(`This is the JSON version of the message: ${messageJSON.yellow}`)
-  console.log(`This is the XML version of the message: ${messageXML.blue}`) */
 
   console.log(`The broker received this: ${message.blue}`);
 
-  mongo.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (error, client) => {
+  mongo.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (error, client) => {
     var myCol = client.db('messagesdb').collection('messages'); // DB name and collection name
     myCol.insertOne(
       {
