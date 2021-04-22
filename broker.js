@@ -17,9 +17,13 @@ broker.on('ready', () => {
 broker.on("published", (packet) => {
   var message = packet.payload.toString();
 
-  console.log(`The broker received this: ${message.blue}`); 
+  console.log(`The broker received this: ${message}`.blue);
 
-  mongo.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (error, client) => {
+  var messageAsObj = JSON.parse(message)
+  console.log(`The broker received this: ${messageAsObj}`.yellow);
+
+  
+   mongo.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (error, client) => {
     var myCol = client.db('messagesdb').collection('messages'); // DB name and collection name
     myCol.insertOne(
       {

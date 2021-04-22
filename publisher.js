@@ -48,21 +48,21 @@ client.on('connect', () => {
 
         client.publish(trashTopic, arrayAsString) 
         console.log('––– Trash sent:', arrayAsString.blue, '\n')
-    }, 7000);
+    }, 10000);
 
 
     /* 
-    * For the fire department
+    * Smoke detector for fire department
     */
     setInterval(() => {
 
         var fireSensorData = 
-            {
+            [{
                 "n": "fireSensor",
                 "u": "Bool",
                 "t": Date.now(),
                 "bv": generateIsBurning()
-            }
+            }]
         
 
         var arrayTostring = JSON.stringify(fireSensorData);
