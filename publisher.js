@@ -32,7 +32,7 @@ client.on('connect', () => {
                 "n": "temperatureSensor",
                 "u": "Celsius",
                 "t": Date.now(),
-                "v": getRandomNum(-30, 30)
+                "v": getRandomNum(-30, 40)
             },
             {
                 "n": "humiditySensor",
@@ -47,12 +47,12 @@ client.on('connect', () => {
         var message = json2xml(jsonObj); // Convert to JSON to XML */
 
         client.publish(trashTopic, arrayAsString) 
-        console.log('––– Trash sent:', arrayAsString.blue, '\n')
+        console.log('––– Trash sensor sent:', arrayAsString.blue, '\n')
     }, 10000);
 
 
     /* 
-    * Smoke detector for fire department
+    * Fire detector for fire department
     */
     setInterval(() => {
 
@@ -75,7 +75,7 @@ client.on('connect', () => {
         console.log(message) */
 
         client.publish(fireTopic, arrayTostring.toString()) 
-        console.log('––– Fire sent:', arrayTostring.blue, '\n')
+        console.log('––– Fire sensor sent:', arrayTostring.blue, '\n')
     }, 3500);
 
 });
