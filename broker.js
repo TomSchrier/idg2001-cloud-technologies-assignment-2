@@ -17,6 +17,12 @@ mongoose.connect("mongodb+srv://admin:admin@cluster0.j7zur.mongodb.net/messagesd
 	useNewUrlParser: true
 });
 
+function readableDate(timestamp) {
+    const dateObject = new Date(timestamp)
+    const humanDateFormat = dateObject.toLocaleString() //DD.MM.YYYY, HH:MM:SS
+    return humanDateFormat;
+}
+
 const database = mongoose.connection;
 
 database.on('error', console.error.bind(console, "connection error:"));
@@ -39,14 +45,14 @@ broker.on('published', (packet) => {
 		var FireDataToSave = new FireModel({
 			name: messageAsObj[0].n,
 			unit: messageAsObj[0].u,
-			time: messageAsObj[0].t,
+			time: readableDate(messageAsObj[0].t),
 			value: messageAsObj[0].bv
 		});
 
-		FireDataToSave.save(function (err, doc) {
+		/* FireDataToSave.save(function (err, doc) {
 			if (err) return console.error(err);
 			console.log('Data from Fire Sensor saved succussfully!'.green);
-		});
+		}); */
 		
 	//If it isnt a fire sensor, its a trash sensor -> save all the information to the database
 	} else if (messageAsObj[0].n !== "fireSensor") {
@@ -54,26 +60,26 @@ broker.on('published', (packet) => {
 			fullnessSensor: {
 				name: messageAsObj[0].n,
 				unit: messageAsObj[0].u,
-				time: messageAsObj[0].t,
+				time: readableDate(messageAsObj[0].t),
 				value: messageAsObj[0].v
 			},
 			temperatureSensor: {
 				name: messageAsObj[1].n,
 				unit: messageAsObj[1].u,
-				time: messageAsObj[1].t,
+				time: readableDate(messageAsObj[0].t),
 				value: messageAsObj[1].v
 			},
 			humiditySensor: {
 				name: messageAsObj[2].n,
 				unit: messageAsObj[2].u,
-				time: messageAsObj[2].t,
+				time: readableDate(messageAsObj[0].t),
 				value: messageAsObj[2].v
 			}
 		});
 
-		TrashDataToSave.save(function (err, doc) {
+		/* TrashDataToSave.save(function (err, doc) {
 			if (err) return console.error(err);
 			console.log("Data from Trash Sensor saved succussfully!".green);
-		});
+		}); */
 	}
 });

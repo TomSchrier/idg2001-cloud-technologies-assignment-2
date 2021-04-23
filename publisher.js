@@ -48,7 +48,7 @@ client.on('connect', () => {
 
         client.publish(trashTopic, arrayAsString) 
         console.log('––– Trash sensor sent:', arrayAsString.blue, '\n')
-    }, 10000);
+    }, 3000);
 
 
     /* 

@@ -14,9 +14,15 @@ client.on('message', (topic, message) => {
     var message = message
     let messageAsObj = JSON.parse(message)
 
-    if (messageAsObj[0].v > 80) {
-        console.log('Trash level is full (mood)');
+    if (messageAsObj[0].v > 75 && messageAsObj[1].v > 20 && messageAsObj[2].v > 66) {
+        console.log('🥵💦 Hot sweaty trash is ready to be picked up'.red);
+    } else if (messageAsObj[0].v > 75 ) {
+        console.log('Trash is full'.red);
     }
+
+
+
+
     console.log(`I got: '${messageAsObj}' from the topic '${topic.yellow}'.`)
 });
 
