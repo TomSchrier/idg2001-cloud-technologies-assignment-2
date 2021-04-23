@@ -10,8 +10,13 @@ client.on('connect', () => {
     client.subscribe(trashTopic)
 });
 
-await client.on('message', (topic, message) => {
+client.on('message', (topic, message) => {
     var message = message
-    console.log(`I got: '${message.blue}' from the topic '${topic.yellow}'.`)
+    let messageAsObj = JSON.parse(message)
+
+    if (messageAsObj[0].v > 80) {
+        console.log('Trash level is full (mood)');
+    }
+    console.log(`I got: '${messageAsObj}' from the topic '${topic.yellow}'.`)
 });
 

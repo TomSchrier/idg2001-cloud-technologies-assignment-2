@@ -1,64 +1,35 @@
 // MQTT broker
-var mosca = require('mosca');
-var settings = { port: 8080 };
-var broker = new mosca.Server(settings);
+const mosca = require('mosca');
+const settings = { port: 8080 };
+const broker = new mosca.Server(settings);
 
-var colors = require('colors');
+//Other
+const colors = require('colors');
 const xml2js = require('xml2js');
 
-var mongoose = require("mongoose");
+//Mongoose
+const mongoose = require("mongoose");
+const FireModel = require('./models/fire_sensor_schema');
+const TrashModel = require('./models/trash_sensor_schema');
 
 mongoose.connect("mongodb+srv://admin:admin@cluster0.j7zur.mongodb.net/messagesdb?retryWrites=true&w=majority", {
 	useUnifiedTopology: true,
 	useNewUrlParser: true
 });
 
-var db = mongoose.connection;
+const database = mongoose.connection;
 
-db.on("error", console.error.bind(console, "connection error:"));
+database.on('error', console.error.bind(console, "connection error:"));
 
-db.once("open", function () {
-	console.log("Connection Successful!");
+database.once('open', function () {
+	console.log('🟢 Connection Successful!'.green);
 });
-
-var fireSchema = mongoose.Schema({
-	name: { type: String, required: true, trim: true },
-	unit: { type: String, required: true },
-	time: { type: String, required: true, max: Date.now() },
-	value: { type: Boolean, required: true }
-});
-
-var FireModel = mongoose.model("FireModel", fireSchema, "fire_sensor_data");
-
-var trashSchema = mongoose.Schema({
-	fullnessSensor: {
-		name: { type: String },
-		unit: { type: String },
-		time: { type: String, max: Date.now() },
-		value: { type: Number }
-	},
-	temperatureSensor: {
-		name: { type: String },
-		unit: { type: String },
-		time: { type: String , max: Date.now()},
-		value: { type: Number, min: -30, max: 40}
-	},
-	humiditySensor: {
-		name: { type: String },
-		unit: { type: String },
-		time: { type: String, max: Date.now() },
-		value: { type: Number, min: 0, max: 100 }
-	}
-});
-
-var TrashModel = mongoose.model("TrashModel", trashSchema, "trash_sensor_data");
-
 
 broker.on('ready', () => {
 	console.log('🟢 Broker is ready.'.green);
 });
 
-broker.on("published", (packet) => {
+broker.on('published', (packet) => {
 	var message = packet.payload.toString();
 
 	var messageAsObj = JSON.parse(message)
@@ -74,7 +45,7 @@ broker.on("published", (packet) => {
 
 		FireDataToSave.save(function (err, doc) {
 			if (err) return console.error(err);
-			console.log("Data from Fire Sensor saved succussfully!".green);
+			console.log('Data from Fire Sensor saved succussfully!'.green);
 		});
 		
 	//If it isnt a fire sensor, its a trash sensor -> save all the information to the database

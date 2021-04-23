@@ -18,7 +18,7 @@ client.on('message', (fireTopic, message) => {
 
     //check if the 'isBurning' value is true, if so, log it to the console with a time stamp.
     if (messageAsObj[0].bv) {
-        console.log(`\n 🔥 Dumpster fire detected! – (${readableDate((messageAsObj[0].t))}) \n`.red)
+        console.log(`\n🔥 Dumpster fire detected! – (${readableDate((messageAsObj[0].t))}) \n`.red)
     }
 });
 
