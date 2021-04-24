@@ -1,7 +1,8 @@
 const mqtt = require('mqtt');
 const colors = require('colors');
-var client = mqtt.connect('mqtt://localhost:8080');
-var fireTopic = 'fire';
+const client = mqtt.connect('mqtt://localhost:8080');
+const fireTopic = 'fire';
+const helpers = require('./helpers');
 
 //function to convert Date.now() to human readable time.
 function readableDate(timestamp) {
@@ -18,7 +19,7 @@ client.on('message', (fireTopic, message) => {
 
     //check if the 'isBurning' value is true, if so, log it to the console with a time stamp.
     if (messageAsObj[0].bv) {
-        console.log(`\n🔥 Dumpster fire detected! – (${messageAsObj[0].t}) \n`.red)
+        console.log(`\n🔥 Dumpster fire detected! – (${helpers.readableDate(messageAsObj[0].t)}) \n`.red);
     }
 });
 

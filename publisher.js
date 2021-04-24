@@ -24,19 +24,19 @@ client.on('connect', () => {
         var trashSensorData = [
             {
                 "n": "fullnessSensor",
-                "u": "Percent",
+                "u": "percent",
                 "t": Date.now(),
                 "v": getRandomNum(0, 100)
             },
             {
                 "n": "temperatureSensor",
-                "u": "Celsius",
+                "u": "celsius",
                 "t": Date.now(),
                 "v": getRandomNum(-30, 40)
             },
             {
                 "n": "humiditySensor",
-                "u": "Percent",
+                "u": "percent",
                 "t": Date.now(),
                 "v": getRandomNum(0, 100)
             }
