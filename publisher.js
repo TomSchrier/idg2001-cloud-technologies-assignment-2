@@ -2,6 +2,7 @@ const mqtt = require('mqtt');
 const colors = require('colors');
 const json2xml = require('json2xml');
 const client = mqtt.connect('mqtt://localhost:8080');
+const EXI4JSON = require('exificient.js');
 
 const trashTopic = 'trash-level';
 const fireTopic = 'fire';
@@ -42,12 +43,20 @@ client.on('connect', () => {
             }
         ]
 
-        var arrayAsString = JSON.stringify(trashSensorData);
-        /* var jsonObj = JSON.parse(arrayAsString); // Convert JSON string into Object
-        var message = json2xml(jsonObj); // Convert to JSON to XML */
+        console.log(trashSensorData);
 
-        client.publish(trashTopic, arrayAsString) 
-        console.log('––– Trash sensor sent:', arrayAsString.blue, '\n')
+        // encode JSON object to EXI
+        var EXI = EXI4JSON.exify(trashSensorData);
+        console.log("EXI under\n")
+        console.log(EXI);
+
+        // decode EXIforJSON
+        var jsonObjOut = EXI4JSON.parse(EXI);
+        console.log("JSON decodet fra EXI under\n")
+        console.log(jsonObjOut);
+
+        client.publish(trashTopic, EXI)
+        console.log('––– Trash sensor sent:', EXI, '\n')
     }, 3000);
 
 
@@ -56,14 +65,14 @@ client.on('connect', () => {
     */
     setInterval(() => {
 
-        var fireSensorData = 
+        var fireSensorData =
             [{
                 "n": "fireSensor",
                 "u": "Bool",
                 "t": Date.now(),
                 "bv": generateIsBurning()
             }]
-        
+
 
         var arrayTostring = JSON.stringify(fireSensorData);
 
@@ -74,8 +83,8 @@ client.on('connect', () => {
 
         console.log(message) */
 
-        client.publish(fireTopic, arrayTostring.toString()) 
+        client.publish(fireTopic, arrayTostring.toString())
         console.log('––– Fire sensor sent:', arrayTostring.blue, '\n')
-    }, 3500);
+    }, 10000000);
 
 });
