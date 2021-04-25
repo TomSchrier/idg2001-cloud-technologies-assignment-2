@@ -1,23 +1,12 @@
 const mqtt = require('mqtt');
-const colors = require('colors');
-const json2xml = require('json2xml');
 const client = mqtt.connect('mqtt://localhost:8080');
-
-const trashTopic = 'trash-level';
+const colors = require('colors');
 const fireTopic = 'fire';
+const helpers = require('./helpers');
+const trashTopic = 'trash-level';
 
 client.on('connect', () => {
     console.log('\n🟢 Publisher is connected. \n'.green);
-
-    function getRandomNum(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
-    }
-
-    function generateIsBurning() {
-        return Math.random() < 0.25 // 25% chance for fire = true
-    }
 
     setInterval(() => {
 
@@ -26,25 +15,23 @@ client.on('connect', () => {
                 "n": "fullnessSensor",
                 "u": "percent",
                 "t": Date.now(),
-                "v": getRandomNum(0, 100)
+                "v": helpers.getRandomNum(0, 100)
             },
             {
                 "n": "temperatureSensor",
                 "u": "celsius",
                 "t": Date.now(),
-                "v": getRandomNum(-30, 40)
+                "v": helpers.getRandomNum(-30, 40)
             },
             {
                 "n": "humiditySensor",
                 "u": "percent",
                 "t": Date.now(),
-                "v": getRandomNum(0, 100)
+                "v": helpers.getRandomNum(0, 100)
             }
         ]
 
         var arrayAsString = JSON.stringify(trashSensorData);
-        /* var jsonObj = JSON.parse(arrayAsString); // Convert JSON string into Object
-        var message = json2xml(jsonObj); // Convert to JSON to XML */
 
         client.publish(trashTopic, arrayAsString) 
         console.log('––– Trash sensor sent:', arrayAsString.blue, '\n')
@@ -61,20 +48,12 @@ client.on('connect', () => {
                 "n": "fireSensor",
                 "u": "Bool",
                 "t": Date.now(),
-                "bv": generateIsBurning()
+                "bv": helpers.generateIsBurning()
             }]
         
-
         var arrayTostring = JSON.stringify(fireSensorData);
 
-        /*var jsonObj = JSON.parse(arrayTostring); // Convert JSON string into Object
-
-        console.log(jsonObj)
-        var message = json2xml(jsonObj); // Convert to JSON to XML
-
-        console.log(message) */
-
-        client.publish(fireTopic, arrayTostring.toString()) 
+        client.publish(fireTopic, arrayTostring) 
         console.log('––– Fire sensor sent:', arrayTostring.blue, '\n')
     }, 3500);
 

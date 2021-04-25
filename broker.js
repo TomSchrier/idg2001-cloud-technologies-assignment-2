@@ -30,7 +30,7 @@ broker.on('ready', () => {
 });
 
 broker.on('published', (packet) => {
-	var message = packet.payload.toString();
+	var message = packet.payload;
 
 	var messageAsObj = JSON.parse(message)
 
@@ -71,9 +71,9 @@ broker.on('published', (packet) => {
 			}
 		});
 
-		 /* TrashDataToSave.save(function (err, doc) {
+		TrashDataToSave.save(function (err, doc) {
 			if (err) return console.error(err);
 			console.log("Data from Trash Sensor saved succussfully!".green);
-		});  */
+		});
 	}
 });
