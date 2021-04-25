@@ -6,7 +6,7 @@
 
 //Use the exports keyword to make properties and methods available outside the module file.
  exports.readableDate = function (timestamp) {
-    const dateObject = new Date(timestamp)
+    const dateObject = new Date(parseInt(timestamp))
     const humanDateFormat = dateObject.toLocaleString() //DD.MM.YYYY, HH:MM:SS
     return humanDateFormat.toString();
 }

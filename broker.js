@@ -5,7 +5,8 @@ const broker = new mosca.Server(settings);
 
 //Other
 const colors = require('colors');
-const xml2js = require('xml2js');
+const helpers = require('./helpers');
+const parser = require('xml2json');
 
 //Mongoose
 const mongoose = require("mongoose");
@@ -30,50 +31,55 @@ broker.on('ready', () => {
 });
 
 broker.on('published', (packet) => {
-	var message = packet.payload.toString();
+	var message = packet.payload;
+	var json = parser.toJson(message);
+	var JSONObject = JSON.parse(json);
 
-	var messageAsObj = JSON.parse(message)
+	//If JSONObject.data is true, it is data from a Trash sensor, if it is false, it is data from a fire sensor
+	if (JSONObject.trashData) {
 
-	//If it is a fire sensor and its value is true -> save it in the database, otherwise, dont save it
-	if (messageAsObj[0].n === "fireSensor" && messageAsObj[0].bv) {
-		var FireDataToSave = new FireModel({
-			name: messageAsObj[0].n,
-			unit: messageAsObj[0].u,
-			time: messageAsObj[0].t,
-			value: messageAsObj[0].bv
-		});
-
-		 FireDataToSave.save(function (err, doc) {
-			if (err) return console.error(err);
-			console.log('Data from Fire Sensor saved succussfully!'.green);
-		}); 
-		
-	//If it isnt a fire sensor, its a trash sensor -> save all the information to the database
-	} else if (messageAsObj[0].n !== "fireSensor") {
 		var TrashDataToSave = new TrashModel({
 			fullnessSensor: {
-				name: messageAsObj[0].n,
-				unit: messageAsObj[0].u,
-				time: messageAsObj[0].t,
-				value: messageAsObj[0].v
+				name: JSONObject.trashData.trashSensor[0].n,
+				unit: JSONObject.trashData.trashSensor[0].u,
+				time: JSONObject.trashData.trashSensor[0].t,
+				value: JSONObject.trashData.trashSensor[0].v
 			},
 			temperatureSensor: {
-				name: messageAsObj[1].n,
-				unit: messageAsObj[1].u,
-				time: messageAsObj[0].t,
-				value: messageAsObj[1].v
+				name: JSONObject.trashData.trashSensor[1].n,
+				unit: JSONObject.trashData.trashSensor[1].u,
+				time: JSONObject.trashData.trashSensor[1].t,
+				value: JSONObject.trashData.trashSensor[1].v
 			},
 			humiditySensor: {
-				name: messageAsObj[2].n,
-				unit: messageAsObj[2].u,
-				time: messageAsObj[0].t,
-				value: messageAsObj[2].v
+				name: JSONObject.trashData.trashSensor[2].n,
+				unit: JSONObject.trashData.trashSensor[2].u,
+				time: JSONObject.trashData.trashSensor[2].t,
+				value: JSONObject.trashData.trashSensor[2].v
 			}
 		});
 
-		 /* TrashDataToSave.save(function (err, doc) {
+		TrashDataToSave.save(function (err, doc) {
 			if (err) return console.error(err);
-			console.log("Data from Trash Sensor saved succussfully!".green);
-		});  */
+			console.log(`Data from Trash Sensor saved succussfully! (${helpers.readableDate(JSONObject.trashData.trashSensor[0].t)}) \n`.green);
+		});
+
+	}
+
+	if (!JSONObject.trashData) {
+		if (JSONObject.fireSensorData.bv == 'true') {
+			//Only save data from the Fire Sensor of its boolean value is true
+			var FireDataToSave = new FireModel({
+				name: JSONObject.fireSensorData.n,
+				unit: JSONObject.fireSensorData.u,
+				time: JSONObject.fireSensorData.t,
+				value: JSONObject.fireSensorData.bv
+			});
+
+			FireDataToSave.save(function (err, doc) {
+				if (err) return console.error(err);
+				console.log(`Data from Fire Sensor saved succussfully! ${helpers.readableDate(JSONObject.fireSensorData.t)}) \n`.green);
+			});
+		}
 	}
 });

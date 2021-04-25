@@ -1,25 +1,21 @@
 const mqtt = require('mqtt');
-const colors = require('colors');
 const client = mqtt.connect('mqtt://localhost:8080');
+const colors = require('colors');
 const fireTopic = 'fire';
 const helpers = require('./helpers');
-
-//function to convert Date.now() to human readable time.
-function readableDate(timestamp) {
-    const dateObject = new Date(timestamp)
-    const humanDateFormat = dateObject.toLocaleString() //DD.MM.YYYY, HH:MM:SS
-    return humanDateFormat;
-}
+const parser = require('xml2json');
 
 //When the broker has a message with the 'fire' topic run this code:
 client.on('message', (fireTopic, message) => {
-    message = message.toString()
 
-    let messageAsObj = JSON.parse(message)
+    //convert XML to JSON
+    message = message.toString()
+    var json = parser.toJson(message);
+    var JSONObject = JSON.parse(json);
 
     //check if the 'isBurning' value is true, if so, log it to the console with a time stamp.
-    if (messageAsObj[0].bv) {
-        console.log(`\n🔥 Dumpster fire detected! – (${helpers.readableDate(messageAsObj[0].t)}) \n`.red);
+    if (JSONObject.fireSensorData.bv == 'true') {
+        console.log(`\n🔥 Dumpster fire detected! – (${helpers.readableDate(JSONObject.fireSensorData.t)}) \n`.red);
     }
 });
 

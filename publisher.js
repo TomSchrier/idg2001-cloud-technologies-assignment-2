@@ -1,6 +1,6 @@
 const mqtt = require('mqtt');
 const colors = require('colors');
-const json2xml = require('json2xml');
+var parser = require('xml2json');
 const client = mqtt.connect('mqtt://localhost:8080');
 
 const trashTopic = 'trash-level';
@@ -21,7 +21,7 @@ client.on('connect', () => {
 
     setInterval(() => {
 
-        var trashSensorData = [
+        var trashSensor = [
             {
                 "n": "fullnessSensor",
                 "u": "percent",
@@ -42,13 +42,11 @@ client.on('connect', () => {
             }
         ]
 
-        var arrayAsString = JSON.stringify(trashSensorData);
-        /* var jsonObj = JSON.parse(arrayAsString); // Convert JSON string into Object
-        var message = json2xml(jsonObj); // Convert to JSON to XML */
+        var xmlTrashSensor = parser.toXml({ trashData: { trashSensor } });
 
-        client.publish(trashTopic, arrayAsString) 
-        console.log('––– Trash sensor sent:', arrayAsString.blue, '\n')
-    }, 3000);
+        client.publish(trashTopic, xmlTrashSensor)
+        console.log('––– Trash sensor sent:', (xmlTrashSensor).blue + '\n')
+    }, 7000);
 
 
     /* 
@@ -56,26 +54,18 @@ client.on('connect', () => {
     */
     setInterval(() => {
 
-        var fireSensorData = 
+        var fireSensorData =
             [{
                 "n": "fireSensor",
                 "u": "Bool",
                 "t": Date.now(),
                 "bv": generateIsBurning()
             }]
-        
 
-        var arrayTostring = JSON.stringify(fireSensorData);
+        var xmlFireSensor = parser.toXml({ fireSensorData });
 
-        /*var jsonObj = JSON.parse(arrayTostring); // Convert JSON string into Object
-
-        console.log(jsonObj)
-        var message = json2xml(jsonObj); // Convert to JSON to XML
-
-        console.log(message) */
-
-        client.publish(fireTopic, arrayTostring.toString()) 
-        console.log('––– Fire sensor sent:', arrayTostring.blue, '\n')
-    }, 3500);
+        client.publish(fireTopic, xmlFireSensor)
+        console.log('––– Fire sensor sent:', (xmlFireSensor).blue + '\n')
+    }, 3000);
 
 });
