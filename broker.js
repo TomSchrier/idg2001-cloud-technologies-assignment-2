@@ -5,8 +5,6 @@ const broker = new mosca.Server(settings);
 
 //Other
 const colors = require('colors');
-const xml2js = require('xml2js');
-const EXI4JSON = require('exificient.js');
 
 //Mongoose
 const mongoose = require("mongoose");
@@ -31,28 +29,12 @@ broker.on('ready', () => {
 });
 
 broker.on('published', (packet) => {
-	console.log(packet.payload);
-	var message = packet.payload.toString();
-	var res = message.replace(/,/gi, " ");
-	console.log(res);
-	/* console.log(JSON.parse(packet.payload));
-	var message = packet.payload.toString();
-	var messageAsObj = JSON.parse(message);
-	console.log(messageAsObj)
+	var message = packet.payload;
 
-
-
-	// decode EXIforJSON
-	var jsonObjOut = EXI4JSON.parse(messageAsObj);
-	console.log("JSON decodet fra EXI under\n")
-	console.log(jsonObjOut); /*
-
-	/* var message = packet.payload.toString();
-
-	var messageAsObj = JSON.parse(message) */
+	var messageAsObj = JSON.parse(message)
 
 	//If it is a fire sensor and its value is true -> save it in the database, otherwise, dont save it
-	/* if (messageAsObj[0].n === "fireSensor" && messageAsObj[0].bv) {
+	if (messageAsObj[0].n === "fireSensor" && messageAsObj[0].bv) {
 		var FireDataToSave = new FireModel({
 			name: messageAsObj[0].n,
 			unit: messageAsObj[0].u,
@@ -60,12 +42,12 @@ broker.on('published', (packet) => {
 			value: messageAsObj[0].bv
 		});
 
-		/* FireDataToSave.save(function (err, doc) {
-		   if (err) return console.error(err);
-		   console.log('Data from Fire Sensor saved succussfully!'.green);
-	   });  
-
-		//If it isnt a fire sensor, its a trash sensor -> save all the information to the database
+		 FireDataToSave.save(function (err, doc) {
+			if (err) return console.error(err);
+			console.log('Data from Fire Sensor saved succussfully!'.green);
+		}); 
+		
+	//If it isnt a fire sensor, its a trash sensor -> save all the information to the database
 	} else if (messageAsObj[0].n !== "fireSensor") {
 		var TrashDataToSave = new TrashModel({
 			fullnessSensor: {
@@ -88,9 +70,9 @@ broker.on('published', (packet) => {
 			}
 		});
 
-		 TrashDataToSave.save(function (err, doc) {
-		   if (err) return console.error(err);
-		   console.log("Data from Trash Sensor saved succussfully!".green);
-	   });  
-	} */
+		TrashDataToSave.save(function (err, doc) {
+			if (err) return console.error(err);
+			console.log("Data from Trash Sensor saved succussfully!".green);
+		});
+	}
 });
