@@ -21,9 +21,9 @@ For example write this in each terminal:
 
 `node publisher.js`
 
-`node sub_fire.js`
+`node sub_fire_department.js`
 
-`node sub_trash.js`
+`node sub_trash_collection.js`
 
 All the files will connect to the Broker. Then the publisher will start to publish both Fire Sensor data and trash Sensor data. The subscriber then receives this data because they are subscribers to each of their topics.
 
@@ -38,7 +38,7 @@ We decided to do a version with each type because we did not want to clutter our
 
 *Due to the rules of well-formed XML, we had to create a custom outer element for the Trash sensor in the XML payload. Otherwise, the npm JSON/XML converter can not convert the data back to JavaScript.
 
-**The error we got was `SKRIV INN ERROR HER.` This error only happens when the EXI is converted to a string (it must be a string to be published). We also tried not converting to a string, but then the Broker could not understand the message. We asked for help from another student group, and they thought it might be because of Mosca, although we are unsure.
+**The error we got was `Error: Distinguishing Bits are 0.` This error only happens when the EXI is converted to a string (it must be a string to be published). We also tried not converting to a string, but then the Broker could not understand the message. We asked for help from another student group, and they thought it might be because of Mosca, although we are unsure. When Googleing the error, no search results were found, making it hard for us to solve the problem. The EXI documentation states, "Unlike the optional EXI cookie that MAY occur to precede this field, the presence of Distinguishing Bits is REQUIRED in the EXI header." (https://www.w3.org/TR/exi/#DistinguishingBits) But does not show how to include these 'Distinguishing Bits'.
 
 ## Database connection and table structure
 For this project, we are storing some of the sensor data in MongoDB Atlas. We have attached some screenshots of the database in the delivery folder, displaying its table layout.
