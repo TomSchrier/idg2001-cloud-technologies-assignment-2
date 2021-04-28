@@ -49,10 +49,10 @@ We also use Mongoose to check if the data being saved to the database is of the 
 ## Demo
 We have created a small GIF/video to demonstrate the expected results.
 
-![GIF]()
+![GIF](assets/EXI-PAYLOAD.gif)
 
 ### Expected result:
-![IMAGE]()
+![IMAGE](assets/EXI-EXPECTED-RESULT.png)
 
 ## Authors
 - Tom Schrier
