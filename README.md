@@ -13,7 +13,7 @@ Use a package manager to install the project dependencies. During development, w
 For example, `npm install`
 
 ## Usage
-The project has multiple files that need to run. In separate terminals run the files '`broker.js`', '`publisher.js`', '`sub_fire`' and '`sub_trash`'
+The project has multiple files that need to run. In separate terminals run the files '`broker.js`', '`publisher.js`', '`sub_fire_department.js`' and '`sub_trash_collection.js`'
 
 For example write this in each terminal:
 
