@@ -2,7 +2,7 @@
 
 ## More brilliant trash collection for better air quality
 
-Our IoT scenario extends the classic smart collecting by emphasizing better air quality. In addition to notifying when the trash in the trash can is humid and warm. This trash can often contribute to a foul smell and an increase in rodents. We, therefore, want to prioritize emptying these trash cans.
+Our IoT scenario extends the classic smart collecting by emphasizing better air quality. In addition to notifying when the trash is full, our trash can also inform when the trash in the trash can is humid and warm. This trash can often contribute to a foul smell and an increase in rodents. We, therefore, want to prioritize emptying these trash cans.
 
 Our smart trash can also has a smoke detector inside it, allowing the fire department to be notified of potential dumpster fires. Controlling dumpster fires is essential because burning waste can pollute the air with toxins, contributing to harmful and unhealthy air quality.
 
