@@ -5,7 +5,6 @@ const broker = new mosca.Server(settings);
 
 //Other
 const colors = require('colors');
-const xml2js = require('xml2js');
 
 //Mongoose
 const mongoose = require("mongoose");
